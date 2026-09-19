@@ -1,0 +1,67 @@
+# Payroll configuration template.
+# Adjust these values to match your company's payroll rules.
+
+company:
+  # Country code for public holidays (ISO 3166-1 alpha-2)
+  # Examples: MY (Malaysia), SG (Singapore), CN (China), US (United States)
+  country: MY
+  # State/province code when supported by python-holidays
+  state: null
+
+# Standard daily schedule (used for late/early detection)
+schedule:
+  am_in: "08:30"
+  pm_out: "17:30"
+
+# Rest / break rules
+rest:
+  # Standard break allowance per day, in minutes
+  standard_minutes_per_day: 60
+  # How to handle rest time exceeding the standard allowance:
+  #   "exceed_only" -> deduct only the excess from working hours
+  #   "all"         -> deduct the entire break from working hours
+  deduction_mode: "exceed_only"
+  # For employees with multiple rest periods, choose one of:
+  #   "per_segment" -> each segment gets its own standard allowance
+  #   "per_day"     -> one standard allowance per day, total rest is summed
+  multi_segment_rule: "per_day"
+
+# Full-time employee rules
+full_time:
+  # If null, the engine tries to parse "(X DAYS * Y HRS)" from the sheet
+  standard_hours_per_day: 7.5
+  # Days per month considered as full-time working days
+  # If null, auto-detected from "BASIC HOURS" text
+  standard_days_per_month: null
+  # Overtime threshold in hours per day (optional)
+  daily_ot_threshold_hours: null
+
+# Part-time employee rules
+part_time:
+  # Default hourly rate. Override per employee in employees.xlsx if needed.
+  default_hourly_rate: 8.00
+  # Public holiday double pay for part-timers
+  public_holiday_double_pay: true
+
+# Public holiday rules
+public_holiday:
+  # Full-time: treat PH work as overtime after standard hours?
+  full_time_ph_as_ot: true
+  # Full-time: standard hours credited for PH even if not worked?
+  full_time_ph_paid_standard: false
+
+# Full-attendance bonus rules
+full_attendance_bonus:
+  enabled: true
+  # Conditions to receive bonus
+  no_late: true
+  no_early_leave: true
+  no_absence: true
+  no_odd_punch: true
+  # Amount (for reporting only; actual payout handled separately)
+  amount: 0.00
+
+# Anomaly thresholds (for validator warnings)
+anomaly:
+  max_daily_work_hours: 16.0
+  max_daily_break_hours: 4.0
